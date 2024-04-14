@@ -1,0 +1,216 @@
+{%load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASK</title>
+
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css'%}" >
+   
+
+
+
+</head>
+<header class="p-3 bg-dark text-white">
+
+    <div class="container">
+        <div class=" d-flex align-items-center justify-content-center justify-content-lg-start ">
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                <li>
+                    <a href="{% url 'base'%}" class="nav-link px-2 text-white top"> Home</a>
+                </li>
+                <li>
+                    <a href="{% url 'hot'%}" class="nav-link px-2 text-white top"> Hot questions</a>
+                 </li>
+                <li>
+                    <div class="dropdown text-end ">
+                        <a href="#" class="top px-2 nav-link text-white d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Support
+                        </a>
+                        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style>
+                            <li>
+                                <p class="dropdown-item" href="#"> Alexey Naryzhnyy  </p>
+                            </li>
+                            <li>
+                                <p class="dropdown-item" href="#"> IU1-82</p>
+                            </li>
+                            <li>
+                                <p class="dropdown-item" href="#"> nap8099@gmail.com</p>
+                            </li>
+                            <li>
+                                <p class="dropdown-item" href="#"> telegram: fish190</p>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
+            </ul>
+            <form class="col-6 ">
+                <input type="search" class="form-control form-control-dark" placeholder="Search" >
+            </form>
+
+            <div class="dropdown text-end ">
+                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{%static '/img/avatar.jpeg'%}" alt="mdo" width="32" height="32" class="rounded-circle">
+                    
+                </a>
+                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'ask'%}"> Ask</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="#"> Settigns</a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" href="{% url 'base'%}"> Log out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+   
+</header>
+<body >
+   
+
+
+    <header class="p-3 bg-white text-white float-left">
+        <a href="{% url 'base' %}"> <img src="{% static '/img/logo.jpg' %}" height="250px"></a>
+
+    </header>
+    <div class="container" > 
+       
+        <header> 
+            <div class="row flex-nowrap justify-content-between align-items-center"> 
+                <div class="col-4 pt-1"> 
+                    <h1 class="blog-header-logo text-primary font-family"> <a href="#"> QAS </a></h1>
+                    <h4 class="font-family font-italic"> <kbd class="alert-primary text-primary"> Quation answer solution</kbd></h4>
+                </div>
+  
+                
+            </div>
+            <div class="col-15 d-flex justify-content-end align-items-center">
+
+                <aside class="col-md-3   blog-sidebar">
+                    <h2 class="font-italic figure"> Popular tags:</h2>
+                <h4 class="font-monospace"> 
+                
+                    <a href="{% url 'tag' 'Tag1' %}"> <kbd class="bg-primary">Tag1</kbd></a> 
+                    <a href="{% url 'tag' 'Tag2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
+                    <a href="{% url 'tag' 'Tag3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
+                </h4>
+                   
+                   <a href="{% url 'tag' 'All' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
+
+                
+                
+           
+        </aside>
+                        
+                
+
+            </div>
+            
+        </header>
+
+    </div>
+    
+<main>
+    
+    <div class="container">
+        
+
+            <div class="col-15 d-flex justify-content-end align-items-center">
+                <div class="col ">
+                    <h1 class="font-italic top" > <kbd class="alert-primary">New question</kbd></h1>
+                    <h4 class="font-italic top" > <kbd class="alert-info">Tag</kbd></h4>
+                    
+                    <textarea  class="form-control" id="title" aria-placeholder="text" maxlength="100" placeholder="Limit 100"> </textarea>
+                    <h4 class="font-italic top" > <kbd class="alert-info">Text</kbd></h4>
+                    <textarea  class="form-control" id="text" aria-placeholder="text" maxlength="500" placeholder="Limit 500"> </textarea>
+                    <h4 class="font-italic top" > <kbd class="alert-info">Tag</kbd></h4>
+                    <textarea  class="form-control"  aria-placeholder="text" maxlength="20" placeholder="Limit 20"> </textarea>
+                    <button class="btn btn-success top"> Send</button>
+
+                </div>
+
+                <aside class="col-md-3 blog-sidebar">
+                   
+
+                    <div class="p-1">
+                        <h2 class="font-italic">Best members</h2>
+                        <h4>
+                            <ol class="list-unstyled mb-0 ">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Anton</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Anna</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info" > Dmitry</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Stepan</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Olga</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Danil</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Max</kbd> </a>
+                                </li>
+                            </ol>
+                            <ol class="list-unstyled mb-0 top">
+                                <li>
+                                    <a href="#"> <kbd class="bg-info"> Julia</kbd> </a>
+                                </li>
+                            </ol>
+                        </h4>
+                        
+                    </div>
+                
+            </aside>
+            </div>
+            
+        
+
+
+        
+    </div>
+    
+</main>
+
+
+
+
+
+
+
+
+
+
+<!-- <script src="{%static '/js/bootstrap.bundle.js'%}"></script>
+<script src="{%static '/js/bootstrap.js'%}"></script>
+<script src="{%static '/js/jquery/jquery-3.7.1.min.js'%}"></script> -->
+    
+
+</body>
+</html>

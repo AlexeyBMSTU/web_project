@@ -1,0 +1,30 @@
+
+        body {
+           background-image: url(/img/backround.jpg); 
+            font-family: "Georgia", serif;
+            
+        }
+        .right{
+            margin-right: 1%;
+        }
+        .left{
+            margin-left: 1%;
+        }
+        .top{
+            margin-top: 3%;
+        }
+        #title {
+            width: 700px;
+            height: 70px;
+        }
+        #text{
+            width: 700px;
+            height: 300px;
+        }
+#h3 {
+    font-family: 'Arial', 'Verdana', sans-serif;
+}
+
+
+
+

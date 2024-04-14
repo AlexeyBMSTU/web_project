@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUESTION</title>
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}">
+  
+</head>
+<body>
+    <main> 
+        {% block content %}
+
+        {% endblock %}
+        {% block contentpaginate %}
+
+        {% endblock %}
+
+        {% block contentbase %}
+
+        {% endblock %}
+
+    
+
+    
+</main>
+</body>
+
+<div class="container"> 
+    <nav class="paginate-container" aria-label="Pagination">
+        <div class="pagination">
+    
+            <nav class="paginate-container" aria-label="Pagination">
+            <div class="pagination col">
+                
+                <div class="container p-4">
+                    <div class="pagination justify-content-center">
+                        <span class="step-links">
+                          {% if questions.has_previous %}
+                              <a href="?page=1"><button type="button" class="btn btn-outline-primary">Первая </button></a>
+                              <a href="?page={{ questions.previous_page_number }}"><button type="button" class="btn btn-outline-primary">&laquo; </button></a>
+                          {% endif %}
+            
+                          
+                          {% if questions.has_next %}
+                          <a href="?page={{ questions.next_page_number }}"><button type="button" class="btn btn-outline-primary">&raquo;</button></a>
+                          <a href="?page={{ questions.paginator.num_pages }}"><button type="button" class="btn btn-outline-primary">Последняя</button></a>
+                          {% endif %}
+                        </span>
+                    </div>
+                    <div class="top" style="text-align: center">
+                        Страница {{ questions.number }} из {{ questions.paginator.num_pages }}
+                    </div>
+                    </div>
+            </div>
+            </nav>
+        </div>
+    </nav>
+    
+</div>
+
+<script src="{%static '/js/jquery/jquery-3.7.1.min.js'%}"></script>
+<script src="{%static '/js/bootstrap.bundle.js'%}"></script>
+<script src="{%static '/js/bootstrap.js'%}"></script>
+<script src="{%static '/js/bootstrap.bundle.js'%}"></script>
+<script src="{%static '/js/paginate.js'%}"></script>
+
+
+
+</html>
