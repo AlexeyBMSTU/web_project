@@ -49,7 +49,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Likes for answers created'))
 
         self.__add_tags_for_questions()
-        print("Tags and questions joined")
+        #print("Tags and questions joined")
         self.stdout.write(self.style.SUCCESS('Tags -> questions '))
 
 
