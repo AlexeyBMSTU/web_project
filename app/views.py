@@ -71,29 +71,35 @@ def handler500(request):
 #Список новых вопросов
 def new_questions(request):
     page = request.GET.get('page', 1)
- 
-    questions_list=QuestionManager.get_new(self=QuestionModel.objects.all())
-    return render(request, template_name='base.html', context={'questions': paginate(questions_list, page), 'questions_list' : questions_list})
+    popular_tag_list=QuestionManager.get_hot(self=QuestionModel.objects) [:5]
+
+    questions_list= QuestionManager.get_new(self=QuestionModel.objects)
+    tag_list      = TagModel.objects.all()[:3]
+    return render(request, template_name='base.html', context={'questions': paginate(questions_list, page), 'questions_list' : questions_list, 'popular_tags': popular_tag_list, 'tag_list':tag_list})
 
 
 # Список лучших вопросов
 def best_questions(request):
-    #questions_list = Question.objects.all().order_by('-rating')[:200000]
     page = request.GET.get('page', 1)
     questions_list = QuestionManager.get_hot(self=QuestionModel.objects.all())
-    
-    return render(request, template_name='index.html', context={'questions': paginate(questions_list, page), 'questions_list' : questions_list})
+    tag_list      = TagModel.objects.all()[:3]
+    popular_tag_list=QuestionManager.get_hot(self=QuestionModel.objects) [:5]
+    return render(request, template_name='index.html', context={'questions': paginate(questions_list, page), 'tags' : tag_list, 'popular_tags': popular_tag_list})
 
 # Список вопросов по тегу
 def tag_questions(request, tag_id):
     page = request.GET.get('page', 1)
-    question_list = QuestionModel.objects.all()
-    tag_list = QuestionManager.get_tag_questions(cls=TagModel.objects.all(), tag=tag_id)
-    return render(request, template_name='indextag.html', context={'questions': paginate(question_list, page), 'tags' : tag_list})
+    question_list = QuestionManager.get_question_by_tag(cls=QuestionModel.objects, tag=str(int(tag_id)+1))
+    tag_list      = QuestionManager.get_tag_questions  (cls=TagModel.objects,      tag=tag_id)
+    popular_tag_list=QuestionManager.get_hot(self=QuestionModel.objects) [:5]
+    return render(request, template_name='indextag.html', context={'questions': paginate(question_list, page), 'tags' : tag_list, 'popular_tags': popular_tag_list})
 
 # Страница 1 вопроса со списоком ответов
 def OneQuestion(request, question_id):
-    answers_list=QuestionManager.get_one_questions(self=AnswerModel.objects.all())
-    question_list = QuestionManager.get_question_by_tag(cls=QuestionModel.objects.all(), tag=question_id)
+    answers_list=QuestionManager.get_one_questions(self=AnswerModel.objects)
+    question_list = QuestionModel.objects.filter(id=question_id)
     page = request.GET.get('page', 1)
-    return render(request, template_name='question.html', context={'questions': paginate(answers_list, page), 'questions_list' : question_list})
+    popular_tag_list=QuestionManager.get_hot(self=QuestionModel.objects) [:5]
+    tag_list      = QuestionManager.get_tag_questions(cls=TagModel.objects,      tag=str(int(question_id)-1))
+
+    return render(request, template_name='question.html', context={'questions': paginate(answers_list, page), 'questions_list' : question_list, 'popular_tags': popular_tag_list, 'tags':tag_list})

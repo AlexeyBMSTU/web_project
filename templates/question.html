@@ -90,18 +90,17 @@
                     
                 
             </aside>
-                <aside class="col-md-3   blog-sidebar">
-                    <h2 class="font-italic figure"> Popular tags:</h2>
+            <aside class="col-md-3   blog-sidebar">
+                <h2 class="font-italic figure"> Popular tags:</h2>
+                {% for q in popular_tags %}
             <h4 class="font-monospace"> 
-
-                <a href="{%url 'tag' 'Tag1' %}"> <kbd class="bg-primary"> Tag1</kbd></a> 
-                <a href="{%url 'tag' 'Tag2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
-                <a href="{%url 'tag' 'Tag3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
+                <a href="{% url 'tag' q.id %}"> <button type="button" class="btn btn-outline-info text-primary" >Tag{{q.id}}</button></a> 
             </h4>
+            {% endfor %}
+               
+               <a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
 
-                
-                
-           
+       
         </aside>
                         
                 
@@ -129,20 +128,31 @@
                         {% else %}
                         <h3 class="left font-italic"><a href="#"></a><a href="#">Alexey N.</a></h3>
                         {% endif %}
-                        <h4 class="font-italic"> How to open browser?</h4>
-            
+                        {% for question in questions_list %}
+                        
+                        <h4 class="font-italic"> {{question.title}}</h4>
+                        
                         <p> 
-                            Guys, please help me open the browser. Nothing helps.
+                            {{question.text}}
                         </p>
-                        <p> 
-                            I tried to open the browser, error 404 came out. What should i do in such situation?
-                            I'we nevre come across anythixng like this. I checked the internet, everything works!
-                        </p>
-                        <p> {{questions.id}}
-                           Tags: 
-                           <a href="{%url 'tag' 'Tag1' %}"> <kbd class="bg-success"> Tag1</kbd></a> 
-                           <a href="{%url 'tag' 'Tag2' %}"> <kbd class="bg-success"> Tag2</kbd></a> 
-                           <a href="{%url 'tag' 'Tag3' %}"> <kbd class="bg-success"> Tag3</kbd></a> 
+
+                        {% endfor %}
+                        <p>
+                            Tags: 
+                            {% if tags %}
+                            {%for q in tags%} 
+                            
+                            
+                            <a href="{% url 'tag' q.id %}"> <kbd class="bg-success">{{q.title}}</kbd></a>
+                            {%endfor%}
+                            ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
+                            {%else%}
+                            <a href="#"> <kbd class="bg-success"> Tag1 errors</kbd></a> 
+                            <a href="#"> <kbd class="bg-success"> Tag2</kbd></a> 
+                            <a href="#"> <kbd class="bg-success"> Tag3</kbd></a> 
+                            ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
+                            
+                            {%endif%}
                         </p>
                     </aside> 
 {% for question in questions %}
@@ -156,37 +166,38 @@
     {% endif %}
 </div>
 <div class="container d-flex ">
-    {% if question.content %}
+    {% if question.text %}
     
     <p>
-        {{question.content}} 
+        {{question.text}} 
         
     </p>
+
+        <h4 class="float-right margin-right "> <kbd class="alert-primary"> {{question.published_at}}</kbd></h4>
+
+        <h4 class="float-right margin-right right"> <kbd class="alert-success"> {{question.correct}}</kbd></h4>
+
+        {% else %}
+        <p> 
+            
+            Error #404 indicates that the client was unable to access the server. This problem is with you,
+            not the server.
+            
+            I know that to do. Try restarting the router. See if the domain name is spelled correctly.
+            
+        </p>
+        {%endif%}
     <p><input type="button" class="btn btn-outline-primary" value="Like" onclick="addLike()">
         <input type="button" class="btn btn-outline-primary" value="Dislike" onclick="addLike()"></p>
 
-    <h4 class="float-right margin-right "> <kbd class="alert-primary"> {{question.created_at}}</kbd></h4>
-    {% else %}
-    <p> 
-        
-        Error #404 indicates that the client was unable to access the server. This problem is with you,
-        not the server.
-
-        I know that to do. Try restarting the router. See if the domain name is spelled correctly.
-         
-    </p>
-    <p><input type="button" class="btn btn-outline-primary" value="Like" onclick="addLike()">
-        <input type="button" class="btn btn-outline-primary" value="Dislike" onclick="addLike()"></p>
-
-    {%endif%}
     <div> 
 
         <aside class="float-right right">
             <img src="{%static '/img/likee.png'%}" height="20px">
     
         </aside>
-        <h4 class="float-right "> <kbd class="alert-primary">{{question.rating}}</kbd></h4>
     </div>
+    <h4 class="left "> <kbd class="alert-primary">{{question.rating}}</kbd></h4>
 
 </div> 
 {% endfor %}

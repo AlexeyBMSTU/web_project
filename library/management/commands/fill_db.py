@@ -70,7 +70,7 @@ class Command(BaseCommand):
         new_users = []
         for i in range(n_users):
             temp_user = User(
-                username=f'User {i + 30000}',
+                username=f'User {i}',
             )
             new_users.append(temp_user)
 
@@ -88,6 +88,7 @@ class Command(BaseCommand):
                 text=text_question + f'{ i} time',
                 user=users[i % len(users)],
                 rating = randint(0, 100000),
+                
             )
             new_questions.append(temp_question)
         QuestionModel.objects.bulk_create(new_questions)
@@ -99,12 +100,14 @@ class Command(BaseCommand):
         users = User.objects.all()
         questions = QuestionModel.objects.all()
         new_answers = []
+        corrects=["OK", " "]
         for i in range(n_answers):
             temp_answer = AnswerModel(
                 text=text_answers + f'{ i} time',
                 question=questions[i % len(questions)],
                 user=users[i % len(users)],
                 rating = randint(0, 100),
+                correct = corrects[randint(0,1)],
             )
             new_answers.append(temp_answer)
 

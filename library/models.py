@@ -35,13 +35,17 @@ class QuestionManager(models.Manager):
 
 
     def get_tag_questions(cls, tag):
-        return cls.filter(title=tag)
+        return cls.filter(title="Tag"+tag+" ")
     
     def get_question_by_tag(cls, tag):
         return cls.filter(tags=tag)
 
     def get_one_questions(self):
-        return self.all().order_by('-published_at')
+        return self.all().order_by('-published_at', '-correct')
+    
+    def get_question_id(self,id):
+        return self.filter(question_id=id)
+
     
 class TagModel(models.Model):
     title = models.CharField(max_length=100)
@@ -61,8 +65,6 @@ class QuestionModel(models.Model):
     published_at = models.DateTimeField(db_default=Now())
 
     objects = QuestionManager()
-    def get_tag_questions(cls, tag):
-        return cls.objects.filter(tags=tag)
     def __str__(self):
         return self.title
     
@@ -72,7 +74,7 @@ class AnswerModel(models.Model):
     question = models.ForeignKey(QuestionModel, on_delete=models.CASCADE, related_name='answers')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answers")
     rating = models.IntegerField(default=0)
-
+    correct = models.CharField(max_length=100)
     published_at = models.DateTimeField(db_default=Now())
 
     objects = AnswerManager()

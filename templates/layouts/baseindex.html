@@ -101,14 +101,13 @@
             </aside>
                 <aside class="col-md-3   blog-sidebar">
                     <h2 class="font-italic figure"> Popular tags:</h2>
+                    {% for q in popular_tags %}
                 <h4 class="font-monospace"> 
-                
-                    <a href="{% url 'tag' 'Tag1' %}"> <kbd class="bg-primary">Tag1</kbd></a> 
-                    <a href="{% url 'tag' 'Tag2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
-                    <a href="{% url 'tag' 'Tag3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
+                    <a href="{% url 'tag' q.id %}"> <button type="button" class="btn btn-outline-info text-primary" >Tag{{q.id}}</button></a> 
                 </h4>
+                {% endfor %}
                    
-                   <a href="All"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
+                   <a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
 
                 
                 
@@ -160,10 +159,11 @@
                                     {%for q in tags%} 
                                     
                                     
-                                    <a href="{% url 'tag' q.title %}"> <kbd class="bg-success">{{q.title}}</kbd></a>  ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
+                                    <a href="{% url 'tag' q.id %}"> <kbd class="bg-success">{{q.title}}</kbd></a>
                                     {%endfor%}
+                                    ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
                                     {%else%}
-                                    <a href="#"> <kbd class="bg-success"> Tag1</kbd></a> 
+                                    <a href="#"> <kbd class="bg-success"> Tag1 errors</kbd></a> 
                                     <a href="#"> <kbd class="bg-success"> Tag2</kbd></a> 
                                     <a href="#"> <kbd class="bg-success"> Tag3</kbd></a> 
                                     ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>

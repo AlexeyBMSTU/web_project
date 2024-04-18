@@ -72,20 +72,15 @@
             <div class="col-15 d-flex justify-content-end align-items-center">
 
                 <aside class="col-md-3   blog-sidebar">
-                        <h2 class="font-italic figure"> Popular tags:</h2>
+                    <h2 class="font-italic figure"> Popular tags:</h2>
+                    {% for q in popular_tags %}
                 <h4 class="font-monospace"> 
-                    
-
-                    <a href="{%url 'tag' 'Tag1' %}"> <kbd class="bg-primary"> Tag1</kbd></a> 
-                    <a href="{%url 'tag' 'Tag2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
-                    <a href="{%url 'tag' 'Tag3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
-      
-    
+                    <a href="{% url 'tag' q.id %}"> <button type="button" class="btn btn-outline-info text-primary" >Tag{{q.id}}</button></a> 
                 </h4>
-       
-                        
-                        
+                {% endfor %}
                    
+                   <a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
+
                 </aside>
                         
                 
@@ -113,7 +108,7 @@
                         </div> 
                         <aside class="col-md-10 ">
                             
-                            <h4 class="font-italic"> {{question.title}} </h4>
+                            <h4 class="font-italic"><a href="{% url 'question' question.id %}">  {{question.title}}</a></h4>
                             {%if question.content%}
                             <p>
                                 {{question.content}}
@@ -127,11 +122,21 @@
                             <p> 
                                 
                                 Tags: 
-                                <a href="#"> <kbd class="bg-success">Tag 1</kbd></a>
-                                <a href="#"> <kbd class="bg-success">Tag 2</kbd></a>
-                                <a href="#"> <kbd class="bg-success">Tag 3</kbd></a>
-                                ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
-                                
+
+                                    {% if tag_list %}
+                                    {%for q in tag_list%} 
+                                    
+                                    
+                                    <a href="{% url 'tag' q.id %}"> <kbd class="bg-success">{{q.title}}</kbd></a>
+                                    {%endfor%}
+                                    ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
+                                    {%else%}
+                                    <a href="#"> <kbd class="bg-success"> Tag1 errors</kbd></a> 
+                                    <a href="#"> <kbd class="bg-success"> Tag2</kbd></a> 
+                                    <a href="#"> <kbd class="bg-success"> Tag3</kbd></a> 
+                                    ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
+                                    
+                                    {%endif%}
                             </p>
                             <p><input type="button" class="btn btn-outline-primary" value="Like" onclick="addLike()">
                                 <input type="button" class="btn btn-outline-primary" value="Dislike" onclick="addLike()"></p>
