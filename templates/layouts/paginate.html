@@ -35,6 +35,7 @@
             <nav class="paginate-container" aria-label="Pagination">
             <div class="pagination col">
                 
+                
                 <div class="container p-4">
                     <div class="pagination justify-content-center">
                         <span class="step-links">
@@ -42,18 +43,35 @@
                               <a href="?page=1"><button type="button" class="btn btn-outline-primary">Первая </button></a>
                               <a href="?page={{ questions.previous_page_number }}"><button type="button" class="btn btn-outline-primary">&laquo; </button></a>
                           {% endif %}
+                          {% if answer_list.has_previous %}
+                          <a href="?page=1"><button type="button" class="btn btn-outline-primary">Первая </button></a>
+                          <a href="?page={{ answer_list.previous_page_number }}"><button type="button" class="btn btn-outline-primary">&laquo; </button></a>
+                            {% endif %}
+
             
                           
                           {% if questions.has_next %}
                           <a href="?page={{ questions.next_page_number }}"><button type="button" class="btn btn-outline-primary">&raquo;</button></a>
                           <a href="?page={{ questions.paginator.num_pages }}"><button type="button" class="btn btn-outline-primary">Последняя</button></a>
                           {% endif %}
+                          {% if answer_list.has_next %}
+                          <a href="?page={{ answer_list.next_page_number }}"><button type="button" class="btn btn-outline-primary">&raquo;</button></a>
+                          <a href="?page={{ answer_list.paginator.num_pages }}"><button type="button" class="btn btn-outline-primary">Последняя</button></a>
+                          {% endif %}
                         </span>
                     </div>
+                    {% if questions.number %}
                     <div class="top" style="text-align: center">
                         Страница {{ questions.number }} из {{ questions.paginator.num_pages }}
                     </div>
+                    {% endif %}
+                    {% if answer_list.number %}
+                    <div class="top" style="text-align: center">
+                        Страница {{ answer_list.number }} из {{ answer_list.paginator.num_pages }}
                     </div>
+                    {% endif %}
+                </div>
+                
             </div>
             </nav>
         </div>

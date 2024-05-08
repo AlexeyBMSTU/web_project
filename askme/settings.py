@@ -11,7 +11,8 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-
+from django.urls import reverse_lazy
+LOGIN_URL = reverse_lazy('users:login')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -23,13 +24,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-fd1m=txvoo)8mi7(%0a)t1q!yvt&^2koz#vtc3e@l@3#y2dg7i'
 
 # SECURITY WRNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 #ALLOWED_HOSTS = []
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
 # Application definition
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
 
     'library',
     'app.management.commands',
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [

@@ -10,8 +10,11 @@ import time
 import sys
 from datetime import datetime
 from django.contrib.auth.models import User
-
+from django.contrib.auth.hashers import make_password
+import time
+from tqdm import tqdm
 from random import choice
+
 
 class Command(BaseCommand):
     help = 'This command fills the database'
@@ -31,6 +34,10 @@ class Command(BaseCommand):
         self.__create_users(ratio)
         #print("Users created")
         self.stdout.write(self.style.SUCCESS('Users created'))
+
+        self.__create_profile(ratio)
+        #print("Profiles created")
+        self.stdout.write(self.style.SUCCESS('Profiles created'))
 
         self.__create_questions(ratio)
         #print("Questions created")
@@ -55,10 +62,7 @@ class Command(BaseCommand):
 
     @staticmethod
     def __create_tags(n_tags: int):
-        tag1 = 'Browser'
-        tag2 = 'Help'
-        tag3 = 'Fix'
-        tags_id = [tag1, tag2, tag3]
+
         new_tags = [
             TagModel(title=f'Tag{i} ')
             for i in range(n_tags)
@@ -68,13 +72,31 @@ class Command(BaseCommand):
     @staticmethod
     def __create_users(n_users: int):
         new_users = []
-        for i in range(n_users):
+        for i in tqdm(range(n_users)):
+            arg = i
             temp_user = User(
                 username=f'User {i}',
+                password=make_password(f'aaaaaaa{i}{i}{i}')
             )
+
             new_users.append(temp_user)
 
-        User.objects.bulk_create(new_users)
+        User.objects.bulk_create(new_users) 
+    @staticmethod
+    def __create_profile(n_profiles: int):
+        new_profiles = []
+        emails = ['gmail.com', 'yandex.ru', 'bk.ru']
+        profiles = User.objects.all()
+        for i in tqdm(range(n_profiles)):
+            temp_profile = ProfileModel(
+                user=profiles[i % len(profiles)],
+                user_name = f'User {i % len(profiles)}',
+                email = f'user{i}@{emails[i % len(emails)]}',
+            )
+            print(i)
+            new_profiles.append(temp_profile)
+
+        ProfileModel.objects.bulk_create(new_profiles)
 
     @staticmethod
     def __create_questions(n_questions: int):
@@ -82,7 +104,7 @@ class Command(BaseCommand):
         title_question = 'How to open the browser?'
         users = User.objects.all()
         new_questions = []
-        for i in range(n_questions):
+        for i in tqdm(range(n_questions)):
             temp_question = QuestionModel(
                 title=title_question + f'{ i} time',
                 text=text_question + f'{ i} time',
@@ -101,7 +123,7 @@ class Command(BaseCommand):
         questions = QuestionModel.objects.all()
         new_answers = []
         corrects=["OK", " "]
-        for i in range(n_answers):
+        for i in tqdm(range(n_answers)):
             temp_answer = AnswerModel(
                 text=text_answers + f'{ i} time',
                 question=questions[i % len(questions)],

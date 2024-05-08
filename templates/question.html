@@ -1,7 +1,7 @@
 {% extends 'layouts/paginate.html'%}
 {% load static %}
 {% block content %}
-
+{% load django_bootstrap5 %}
 <header class="p-3 bg-dark text-white">
     
     <div class="container">
@@ -50,11 +50,11 @@
                         <a class="dropdown-item" href="{% url 'ask'%}"> Ask</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="#"> Settigns</a>
+                        <a class="dropdown-item" href="{% url 'profile'%}"> Settigns</a>
                     </li>
                     <li>
                         <!-- <a class="dropdown-item" href="{% url %/}"> Log out</a> -->
-                        <a class="dropdown-item" href="{% url 'base'%}"> Log out</a>
+                        <a class="dropdown-item" href="{% url 'logout'%}"> Log out</a>
                     </li>
                 </ul>
             </div>
@@ -85,24 +85,17 @@
             <div class="col-15 d-flex justify-content-end align-items-center top">
                 <aside class="col-md-10 ">
                    
-                    <h3 class="font-italic"> Your answers</h4>
+                        {% for question in questions_list %}
+                        
+                        
+                        <h4 class="font-family font-italic"> <kbd class="alert-primary text-black"> Question {{question.id}}</kbd></h4>
 
+
+                        {% endfor %}
                     
                 
             </aside>
-            <aside class="col-md-3   blog-sidebar">
-                <h2 class="font-italic figure"> Popular tags:</h2>
-                {% for q in popular_tags %}
-            <h4 class="font-monospace"> 
-                <a href="{% url 'tag' q.id %}"> <button type="button" class="btn btn-outline-info text-primary" >Tag{{q.id}}</button></a> 
-            </h4>
-            {% endfor %}
-               
-               <a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
-
-       
-        </aside>
-                        
+     
                 
 
             </div>
@@ -114,7 +107,27 @@
     
     <div class="container">
         
+        <div class="col-15 d-flex justify-content-end align-items-center">
 
+            <aside class="col-md-3   blog-sidebar">
+                <h2 class="font-italic figure"> Popular tags:</h2>  
+                <h2></h2>
+                {% for q in popular_tags %}
+                
+                {%  for t in q.tags.all %} 
+            
+                <a href="{% url 'tag' t.id %}"> <button type="button" class="btn btn-outline-info text-primary" >{{t.title}}</button></a> 
+            
+            {% endfor %}
+            {% endfor %}
+               <h2></h2>
+               <div class="text-center"><a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a> </div>
+
+            </aside>
+                    
+            
+
+        </div>
             <div class="col-15 d-flex justify-content-end align-items-center">
                 <div class="col-10">
                     <div class="float-left right">
@@ -123,11 +136,9 @@
                     </div>
                     <aside class="row-md-10 ">
                         
-                        {% if question.user %}
-                        <h3 class="left font-italic"><a href="#">{{question.user}} </a></h3>
-                        {% else %}
-                        <h3 class="left font-italic"><a href="#"></a><a href="#">Alexey N.</a></h3>
-                        {% endif %}
+                        {% for a in author %}
+                        <h3 class="left font-italic"><a href="#">{{a}} </a></h3>
+                        {% endfor %}
                         {% for question in questions_list %}
                         
                         <h4 class="font-italic"> {{question.title}}</h4>
@@ -136,46 +147,39 @@
                             {{question.text}}
                         </p>
 
-                        {% endfor %}
                         <p>
                             Tags: 
-                            {% if tags %}
-                            {%for q in tags%} 
+                            {% for tag in question.tags.all %}
+                            <kbd class="bg-success">{{tag.title}}</kbd>
                             
                             
-                            <a href="{% url 'tag' q.id %}"> <kbd class="bg-success">{{q.title}}</kbd></a>
-                            {%endfor%}
-                            ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
-                            {%else%}
-                            <a href="#"> <kbd class="bg-success"> Tag1 errors</kbd></a> 
-                            <a href="#"> <kbd class="bg-success"> Tag2</kbd></a> 
-                            <a href="#"> <kbd class="bg-success"> Tag3</kbd></a> 
-                            ; Answers: <a href="#"><kbd class="bg-danger"> 543</kbd></a>
-                            
-                            {%endif%}
+                            {% endfor %}
                         </p>
+                        {% endfor %}
                     </aside> 
-{% for question in questions %}
+{% for answer in answer_list %}
 <div class="d-flex float-left right top">
     <img src="{%static '/img/avatar.jpeg'%}" height="60px">
 
-    {% if question.user %}
-    <h4 class="left font-italic"><a href="#">{{question.user}} </a></h4>
+    {% if answer.user %}
+    <h4 class="left font-italic"><a href="#">{{answer.user}} </a></h4>
     {% else %}
     <h4 class="left font-italic"><a href="#"></a><a href="#">Anton G.</a></h4>
     {% endif %}
 </div>
 <div class="container d-flex ">
-    {% if question.text %}
+    {% if answer.text %}
     
     <p>
-        {{question.text}} 
+        {{answer.text}} 
         
     </p>
+    <aside class="col-md-5 blog-sidebar">
+        
+    </aside>
+        <h4 class="float-right margin-right "> <kbd class="alert-primary"> {{answer.published_at}}</kbd></h4>
 
-        <h4 class="float-right margin-right "> <kbd class="alert-primary"> {{question.published_at}}</kbd></h4>
-
-        <h4 class="float-right margin-right right"> <kbd class="alert-success"> {{question.correct}}</kbd></h4>
+        <h4 class="float-right margin-right right"> <kbd class="alert-success"> {{answer.correct}}</kbd></h4>
 
         {% else %}
         <p> 
@@ -197,16 +201,26 @@
     
         </aside>
     </div>
-    <h4 class="left "> <kbd class="alert-primary">{{question.rating}}</kbd></h4>
+    <h4 class="left "> <kbd class="alert-primary">{{answer.rating}}</kbd></h4>
 
 </div> 
 {% endfor %}
                     
                     <div class="col top">
                         <h2 > <kbd class="bg-warning">My answer </kbd></h2>  
-                        <textarea  class="form-control" id="title" aria-placeholder="text" maxlength="200" placeholder="Limit 200"> </textarea>
-                        <button class="btn btn-success top "> Send</button>
+                        <aside class="col-md-7" >
+
+
     
+                            <form  method="post">{% csrf_token %}
+                                {% csrf_token %}
+                                <anything_else>
+                                {% bootstrap_form form %}
+                            
+                                <button type="submit" class="btn btn-success top">Send</button>
+                              </form>
+                
+                    </aside>                        
                     </div>
 
 
@@ -282,9 +296,9 @@
                 <div class="col-2">
                     <a href="{% url 'question' 35 %}?page=1"> <button class="btn btn-primary text-white"> <h3> 1</h3> </button> </a>
     
-                </div>
-                {% for question in questions %}
-                    adasd
+                </div>ASDASD
+                {% for question in answer_list %}
+                    
                 <div class="col-2">
                     <a href="{% url 'question' 35 %}?page={{question.id}}"> <button class="btn btn-info text-white"> <h3> {{question.id}}</h3> </button> </a>
    

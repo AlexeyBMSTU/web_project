@@ -1,11 +1,21 @@
-{% extends 'layouts/paginate.html'%}
-{% load static %}
-{% block contentpaginate %}
+{%load static%}
+{% load django_bootstrap5 %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASK</title>
+
+    <link rel="stylesheet" href="{% static '/css/main.css' %}">
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css'%}" >
+   
 
 
 
+</head>
 <header class="p-3 bg-dark text-white">
-    
+
     <div class="container">
         <div class=" d-flex align-items-center justify-content-center justify-content-lg-start ">
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
@@ -13,10 +23,9 @@
                     <a href="{% url 'base'%}" class="nav-link px-2 text-white top"> Home</a>
                 </li>
                 <li>
-                 <li>
                     <a href="{% url 'hot'%}" class="nav-link px-2 text-white top"> Hot questions</a>
                  </li>
-                    <li>    
+                <li>
                     <div class="dropdown text-end ">
                         <a href="#" class="top px-2 nav-link text-white d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                             Support
@@ -40,12 +49,9 @@
                 
             </ul>
             <form class="col-6 ">
-
-
-                <input type="search" class="form-control form-control-dark" placeholder="#browser" >
+                <input type="search" class="form-control form-control-dark" placeholder="Search" >
             </form>
-          
-           
+
             <div class="dropdown text-end ">
                 <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="{%static '/img/avatar.jpeg'%}" alt="mdo" width="32" height="32" class="rounded-circle">
@@ -56,9 +62,10 @@
                         <a class="dropdown-item" href="{% url 'ask'%}"> Ask</a>
                     </li>
                     <li>
-                        <a class="dropdown-item" href="{% url 'profile'%}"> Settigns</a>
+                        <a class="dropdown-item" href="#"> Settigns</a>
                     </li>
                     <li>
+                        <!-- <a class="dropdown-item" href="{% url %/}"> Log out</a> -->
                         <a class="dropdown-item" href="{% url 'logout'%}"> Log out</a>
                     </li>
                 </ul>
@@ -66,11 +73,12 @@
         </div>
     </div>
    
-   
 </header>
+<body >
 
-<body class="background">
-    <header class="float-left">
+
+
+    <header class="p-3 bg-white text-white float-left">
         <a href="{% url 'base' %}"> <img src="{% static '/img/logo.jpg' %}" height="250px"></a>
 
     </header>
@@ -79,117 +87,56 @@
         <header> 
             <div class="row flex-nowrap justify-content-between align-items-center"> 
                 <div class="col-4 pt-1"> 
-                    <h1 class="blog-header-logo text-primary font-family"> <a href="#"> QAS </a></h1>
+                    <h1 class="blog-header-logo text-primary font-family"> Profile</h1>
+                    <a href="#" >
+                        <img src="{%static '/img/avatar.jpeg'%}" alt="mdo" width="160" height="160" class="rounded-circle">
+                        
+                    </a>
                 </div>
-                {% block contentindex %}
-                
-                {% endblock %}
-                {% block contenttag %}
-            
-                {% endblock %}
-               
-               
-                
+  
                 
             </div>
+            <div class="col-15 d-flex justify-content-end align-items-center">
 
+                <aside class="col-md-3   blog-sidebar">
+                    <h2 class="font-italic figure"> Popular tags:</h2>
+                <h4 class="font-monospace"> 
+                
+                    <a href="{% url 'tag' 'Tag1' %}"> <kbd class="bg-primary">Tag1</kbd></a> 
+                    <a href="{% url 'tag' 'Tag2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
+                    <a href="{% url 'tag' 'Tag3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
+                </h4>
+                   
+                   <a href="{% url 'tag' 'All' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
+
+                
+                
+           
+        </aside>
+                        
+                
+
+            </div>
             
         </header>
 
     </div>
+    
 <main>
     
     <div class="container">
-        <div class="col-15 d-flex justify-content-end align-items-center">
+        <aside class="col-md-7" >
+            {{ email}}
 
-            <aside class="col-md-3   blog-sidebar">
-                <h2 class="font-italic figure"> Popular tags:</h2>  
-                <h2></h2>
-               
-                {% for q in popular_tags %}
-                
-                {%  for t in q.tags.all %} 
 
-                <a href="{% url 'tag' t.id %}"> <button type="button" class="btn btn-outline-info text-primary" >{{t.title}}</button></a> 
-            
-            {% endfor %}
-            {% endfor %}
-               <h2></h2>
-               <div class="text-center"><a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a> </div>
 
-            </aside>
-                    
-            
 
-        </div>
-
+        </aside>
             <div class="col-15 d-flex justify-content-end align-items-center">
-                    <div class="col-10">
-                        
-                        {% for question in questions %}
-                        
-                        <div class=" top d-flex">
-                            <div class="float-left right">
-                                <img src="{% static '/img/avatar.jpeg'%}" height="60px">
-                        
-                            </div> 
-                            <aside class="col-md-10 ">
 
-                                {%if question.title %}
-                                
-                                <h4 class="font-italic"><a href="{% url 'question' question.id %}">  {{question.title}}</a></h4>
-                                
-                                {%else%}
-                                <h4 class="font-italic"> <a href="{% url 'question' question.id %}"> How to open browser?</a></h4>
-                                {%endif%}
-                                {%if question.content%}
-                                <p>
-                                    {{question.content}}
-                                </p>
-                                {%else%}
-                                <p> 
-                                    Guys, please help me open the browser. Nothing helps...
-                                </p>
-                                {%endif%}
-                                <p> 
-                                    Tags: 
-                                    {% for tag in question.tags.all %}
-                                    <kbd class="bg-success">{{tag.title}}</kbd>
-
-                                    
-                                    {% endfor %}
-
-                                </p>
-                                {%if question.published_at %}
-                                <h4 class="float-right margin-right "> <kbd class="alert-primary"> {{question.published_at}}</kbd></h4>
-                                {%endif%}
-                                <p><input type="button" class="btn btn-outline-primary" value="Like" onclick="addLike()">
-                                <input type="button" class="btn btn-outline-primary" value="Dislike" onclick="addLike()"></p>
-
-                            </aside> 
-                            {% if question.rating %}
-                            <div class="float-right left right">
-                                <img src="{% static '/img/likee.png'%}" height="20px">
-                        
-                            </div>
-                            <h4 class="float-right margin-right "> <kbd class="alert-primary"> <span class="counter"> </span>{{question.rating}}</kbd></h4>
-                            
-                            {% endif %}
-                            
-                        </div>
-                        
-
-                        
-                        {% endfor %}
-                        
-                        
-                        
-
-                    </div>
-
-                    <aside class="col-md-3 blog-sidebar">
+                <aside class="col-md-3 blog-sidebar">
                    
- 
+
                     <div class="p-1">
                         <h2 class="font-italic">Best members</h2>
                         <h4>
@@ -245,5 +192,23 @@
 
         
     </div>
-   {%endblock%}
     
+</main>
+
+
+
+
+
+
+
+
+
+
+<!-- <script src="{%static '/js/bootstrap.bundle.js'%}"></script>
+<script src="{%static '/js/bootstrap.js'%}"></script>
+<script src="{%static '/js/jquery/jquery-3.7.1.min.js'%}"></script> -->
+<script src="{% static '/js/jquery/jquery-3.7.1.min.js'%}"></script>
+<script src="{%static '/js/bootstrap.bundle.js'%}"></script> 
+
+</body>
+</html>

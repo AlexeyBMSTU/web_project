@@ -29,10 +29,13 @@ urlpatterns = [
     path('hot', views.best_questions,name='hot'),                          #лучшие вопросы
     path('tag/<str:tag_id>', views.tag_questions, name='tag'),                   #по тегу
     path('question/<str:question_id>', views.OneQuestion, name='question'), 
-    path('login', views.login, name='login'),
-    path('signup', views.signup, name='signup'),
+    path('login', views.log_in, name='login'),
+    path('signup/', views.signup, name='signup'),
     path('ask', views.ask, name='ask'),
     path('admin/', admin.site.urls),
+    path('logout', views.log_out, name='logout'),
+    path('profile/edit', views.edit_profile, name='profile'),
+    path('profile', views.profile, name='my_profile'),
    # path('test', views.test, name='test'),
    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -40,3 +43,4 @@ urlpatterns = [
 
 handler404 = views.pageNotFound
 handler500 = views.handler500
+
