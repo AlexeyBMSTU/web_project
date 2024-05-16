@@ -5,6 +5,7 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseNotFound, HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.urls import reverse
+from pymysql import NULL
 from library.models import   ProfileModel, User, AnswerModel, QuestionModel, TagModel, QuestionManager, TagManager, AnswerManager
 from django.contrib.auth import login, authenticate
 from .forms import CreateAnswer, CreateQuestion, LoginForm, RegisterForm, EditProfile
@@ -47,7 +48,7 @@ def question(request, question_id):
 
 def ask(request):
 
-    popular_tag_list = QuestionManager.get_hot(self=QuestionModel.objects) [:2]
+    popular_tag_list = TagManager.get_popular_tag(self = QuestionModel.objects )
 
     global questions_id
     if request.method == "GET" :
@@ -64,6 +65,8 @@ def ask(request):
                 all_ask = QuestionModel.objects.all()
                 questions_id = str(int(len(all_ask)))
                 return redirect(reverse('question', args = [str(int(questions_id))]))
+            else:
+                return render(request, template_name='incorrect_login.html')
         # else:
         #     ask_form.add_error('title', '')
         #     ask_form.add_error('text', '')
@@ -87,7 +90,7 @@ def signup(request):
             user = user_form.save()
             if user is not None:
                 print("Registration succesfully")
-                return redirect(reverse('hot'))
+                return redirect(reverse('login'))
 
         else:
             incorrect_count = incorrect_count + 1
@@ -119,7 +122,7 @@ def log_in(request):
                 print("Successfully logged in")
                 return redirect(request.GET.get('next', 'hot'))
             else:
-                login_form.add_error('__all__', 'The user is not registered')
+                login_form.add_error('__all__', 'This user is not registered')
                 login_form.add_error('username', '')
                 login_form.add_error('password', '')
         else:
@@ -131,7 +134,7 @@ def log_in(request):
     return render(request, template_name='login.html', context={'form': login_form})
 
 def edit_profile(request):
-    popular_tag_list = QuestionManager.get_hot(self=QuestionModel.objects) [:2]
+    popular_tag_list = TagManager.get_popular_tag(self = QuestionModel.objects )
 
     global incorrect_count
     if request.method == "GET" :
@@ -179,7 +182,7 @@ def new_questions(request):
 
     popular_tag_list = TagManager.get_popular_tag(self = QuestionModel.objects )
 
-    questions_list   = TagManager.get_new_question_list( self = QuestionModel.objects )
+    questions_list   = QuestionManager.get_new_question_list( self = QuestionModel.objects )
 
     return render(request, template_name='base.html', context={'questions': paginate(questions_list, page), 'questions_list' : questions_list, 'popular_tags': popular_tag_list})
 
@@ -191,7 +194,7 @@ def best_questions(request):
 
     popular_tag_list = TagManager.get_popular_tag( self = QuestionModel.objects )
 
-    questions_list   = TagManager.get_best_question_list( self = QuestionModel.objects )
+    questions_list   = QuestionManager.get_best_question_list( self = QuestionModel.objects )
     
     return render(request, template_name='index.html', context={'questions': paginate(questions_list, page), 'popular_tags': popular_tag_list})
 
@@ -211,24 +214,29 @@ def OneQuestion(request, question_id):
     page = request.GET.get('page', 1)
 
     question_list    = QuestionManager.get_question_by_id( self = QuestionModel.objects, question_id = question_id)
-    answers_list     = AnswerManager.get_answer_with_id(self = AnswerModel.objects, answer_id=question_list[0])
+    answers_list     = AnswerManager.get_answer_with_id(self = AnswerModel.objects, answer_id = question_list[0]   )
 
-    popular_tag_list = QuestionManager.get_hot(self=QuestionModel.objects) [:2]
-
+    popular_tag_list = TagManager.get_popular_tag( self = QuestionModel.objects ) 
     author           = QuestionManager.get_author_with_id(self = User.objects, author_id = question_id)
     authors          = QuestionManager.get_all_users(self = User.objects)
 
     if str(*author) == "":
         author = User.objects.filter(id = str(int(len(authors))))
- 
+    # if request.user.id is None:
+    #     return render(request, template_name='please_login_or_registr.html')
+
     if request.method == "GET" :
         answer_form = CreateAnswer()
     if request.method == "POST":
         answer_form = CreateAnswer(request.POST, question_id)
         if answer_form.is_valid():
+            if request.user.id is None:
+                return render(request, template_name='please_login_or_registr.html')        
             ans = answer_form.save(question_id, request.user.id)
             
             if ans is not None:
                 return redirect(reverse('question', args = [str(int(question_id))]))
-            
+            else:
+                return render(request, template_name='incorrect_login.html')
+
     return render(request, template_name='question.html', context={'answer_list': paginate(answers_list, page), 'questions_list' : question_list, 'popular_tags': popular_tag_list, 'form':answer_form, 'author':author})

@@ -18,8 +18,9 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li>
                     <a href="{% url 'base'%}" class="nav-link px-2 text-white top"> Home</a>
-
-                    <a href="{% url 'hot'%}" class="nav-link px-2 text-white top"> Hot questions</a>
+                </li>
+                <li>
+                    <a href="{% url 'login'%}" class="nav-link px-2 text-white top"> Hot questions</a>
                  </li>
                 <li>
                     <div class="dropdown text-end ">
@@ -48,8 +49,8 @@
                 <input type="close" class="form-control form-control-dark" placeholder="Search" >
             </form>
             <div class="col-15">
-                <button type="button" class="btn btn-outline-light me-2"> <a href="{% url 'login'%}">Login</a></button>
-                <button type="button" class="btn btn-warning"><a href="{%url 'signup'%}">Sign-up</a></button>
+                <a href="{%url 'login'%}"><button type="button" class="btn btn-outline-light me-2 text-white">Login</button> </a>
+                 <a href="{%url 'signup'%}"><button type="button" class="btn btn-warning text-black" >Sign up</button> </a>
             </div>
 
         
@@ -79,32 +80,18 @@
                 
                 
             </div>
-            <div class="col-15 d-flex justify-content-end align-items-center top">
+            <div class="col-15 d-flex ">
                 <aside class="col-md-10">
-                    <div class="row">
+                    
 
                         
                                 {% block content %}
 
                                 {% endblock %}
                             
-                    </div>
+                    
                 </aside>
-                <aside class="col-md-3   blog-sidebar">
-                    <h2 class="font-italic figure"> Popular tags:</h2>
-                <h4 class="font-monospace"> 
-                
-                    <a href="{% url 'tag' '1' %}"> <kbd class="bg-primary">Tag1</kbd></a> 
-                    <a href="{% url 'tag' '2' %}"> <kbd class="bg-primary"> Tag2</kbd></a> 
-                    <a href="{% url 'tag' '3' %}"> <kbd class="bg-primary"> Tag3</kbd></a> 
-                </h4>
-                   
-                   <a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a>
 
-                
-                
-           
-        </aside>
                         
                 
 

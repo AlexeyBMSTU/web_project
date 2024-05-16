@@ -10,7 +10,7 @@
                     <a href="#" class="nav-link px-2 text-white top"> Home</a>
                 </li>
                 <li>
-                    <a href="{% url 'hot'%}" class="nav-link px-2 text-white top"> Hot questions</a>
+                    <a href="{% url 'login'%}" class="nav-link px-2 text-white top"> Hot questions</a>
                  </li>
                 <li>
                     <div class="dropdown text-end ">
@@ -39,8 +39,8 @@
                 <input type="search" class="form-control form-control-dark" placeholder="Search" >
             </form>
             <div class="col-15">
-                <button type="button" class="btn btn-outline-light me-2"><a href="{%url 'login'%}">Login </a></button>
-                <button type="button" class="btn btn-warning"> <a href="{%url 'signup'%}">Sign up </a></button>
+                <a href="{%url 'login'%}"><button type="button" class="btn btn-outline-light me-2 text-white">Login</button> </a>
+                 <a href="{%url 'signup'%}"><button type="button" class="btn btn-warning text-black" >Sign up</button> </a>
             </div>
  
           
@@ -214,8 +214,8 @@
      {%endblock%}   
 </main>
 
-<!-- <script src="{%static '/js/bootstrap.bundle.js'%}"></script>
+<script src="{%static '/js/bootstrap.bundle.js'%}"></script>
 <script src="{%static '/js/bootstrap.js'%}"></script>
-<script src="{%static '/js/jquery/jquery-3.7.1.min.js'%}"></script> -->
+<script src="{%static '/js/jquery/jquery-3.7.1.min.js'%}"></script>
 </body>
 </html>

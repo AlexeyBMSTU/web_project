@@ -3,8 +3,8 @@ from django.db import models
 from django.core.management.base import BaseCommand, CommandParser
 # Register your models here.
 # from  library.models import  User1, Answer, Question, Tag, FeedBack
-from  library.models import QuestionManager, AnswerLikeModel, TagModel, QuestionModel, AnswerModel, ProfileModel, QuestionLikeModel, QuestionInfoQuery
-from random import random, randint
+from  library.models import QuestionManager, AnswerLikeModel, TagModel, QuestionModel, AnswerModel, ProfileModel, QuestionLikeModel
+from random import random, randint, shuffle
 from math import floor
 import time
 import sys
@@ -14,61 +14,73 @@ from django.contrib.auth.hashers import make_password
 import time
 from tqdm import tqdm
 from random import choice
+import random
+from random import sample
+from django.db import transaction
+from django.db.models import Count
 
 
 class Command(BaseCommand):
     help = 'This command fills the database'
 
     def add_arguments(self, parser):
-        parser.add_argument('-r', '--ratio', type=int, default=10000, required=False,
+        parser.add_argument('-r', '--ratio', type=int, default=10, required=False,
                             help='The number of users to be created')
    
     def handle(self, *args, **options):
         print(options['ratio'])
         ratio = options.get('ratio', 0)
-        
+
+        print("Tag...")
         self.__create_tags(ratio)
         #print("Tags created")
         self.stdout.write(self.style.SUCCESS('Tags created'))
 
+        print("User...")
         self.__create_users(ratio)
         #print("Users created")
         self.stdout.write(self.style.SUCCESS('Users created'))
 
+        print("Profile...")
         self.__create_profile(ratio)
         #print("Profiles created")
         self.stdout.write(self.style.SUCCESS('Profiles created'))
 
-        self.__create_questions(ratio)
+        print("Qeestions...")
+        self.__create_questions(10*ratio)
         #print("Questions created")
         self.stdout.write(self.style.SUCCESS('Questions created'))
 
-        self.__create_answers(ratio)
+        print("Answer...")
+        self.__create_answers(100*ratio)
         #print("Answers created")
         self.stdout.write(self.style.SUCCESS('Answers created'))
 
-        self.__create_likes_questions(100 * ratio)
+        print("LikesQuestion...")
+        self.__create_likes_questions(200 * ratio)
         #print("Likes questions created")
         self.stdout.write(self.style.SUCCESS('Likes for questions created'))
 
-        self.__create_likes_answers(100 * ratio)
+        print("LikesAnswer...")
+        self.__create_likes_answers(200 * ratio)
         #print("Likes answers created")
         self.stdout.write(self.style.SUCCESS('Likes for answers created'))
 
+        print("Tags->questions...")
         self.__add_tags_for_questions()
         #print("Tags and questions joined")
         self.stdout.write(self.style.SUCCESS('Tags -> questions '))
 
-
+    
     @staticmethod
     def __create_tags(n_tags: int):
 
         new_tags = [
-            TagModel(title=f'Tag{i} ')
+            TagModel(id = i,title=f'Tag{i} ')
             for i in range(n_tags)
         ]
         tages = TagModel.objects.bulk_create(new_tags)
-
+    
     @staticmethod
     def __create_users(n_users: int):
         new_users = []
@@ -82,6 +94,7 @@ class Command(BaseCommand):
             new_users.append(temp_user)
 
         User.objects.bulk_create(new_users) 
+       
     @staticmethod
     def __create_profile(n_profiles: int):
         new_profiles = []
@@ -93,7 +106,6 @@ class Command(BaseCommand):
                 user_name = f'User {i % len(profiles)}',
                 email = f'user{i}@{emails[i % len(emails)]}',
             )
-            print(i)
             new_profiles.append(temp_profile)
 
         ProfileModel.objects.bulk_create(new_profiles)
@@ -103,16 +115,20 @@ class Command(BaseCommand):
         text_question = 'Guys, please help me open the browser. Nothing helps...'
         title_question = 'How to open the browser?'
         users = User.objects.all()
+        tags = TagModel.objects.all()  # Предполагаем, что у вас есть модель Tag для хранения тегов
         new_questions = []
+
         for i in tqdm(range(n_questions)):
+            temp_tags = sample(list(tags), 3)  # Выбор случайного набора тегов
+            #print(temp_tags)
             temp_question = QuestionModel(
-                title=title_question + f'{ i} time',
-                text=text_question + f'{ i} time',
+                title=title_question + f'{i} time',
+                text=text_question + f'{i} time',
                 user=users[i % len(users)],
-                rating = randint(0, 100000),
-                
+                rating=randint(0, len(users)),
             )
             new_questions.append(temp_question)
+
         QuestionModel.objects.bulk_create(new_questions)
 
     @staticmethod
@@ -121,13 +137,16 @@ class Command(BaseCommand):
        
         users = User.objects.all()
         questions = QuestionModel.objects.all()
+        all_ques = list( QuestionModel.objects.all() )
         new_answers = []
         corrects=["OK", " "]
         for i in tqdm(range(n_answers)):
+            random_ques = random.choice(all_ques)
             temp_answer = AnswerModel(
                 text=text_answers + f'{ i} time',
                 question=questions[i % len(questions)],
                 user=users[i % len(users)],
+
                 rating = randint(0, 100),
                 correct = corrects[randint(0,1)],
             )
@@ -176,11 +195,11 @@ class Command(BaseCommand):
     @staticmethod
     def __add_tags_for_questions():
         questions = QuestionModel.objects.all()
-        tags = TagModel.objects.all()
-        for i in range(tags.count()):
-            temp_tag = tags[i]
-            temp_tag.questions.add(*questions[(i % len(questions)):(i + 5) % len(questions)])
-
-
+        tags = TagModel.objects.all()  # Предполагаем, что у вас есть модель Tag для хранения тегов
+        
+        for question in questions:       
+            # Выбираем случайные теги, чтобы добавить к вопросу
+            temp_tags = sample(list(tags), randint(1,3))  # Выбор случайного набора тегов
+            question.tags.set(temp_tags)     
 
 

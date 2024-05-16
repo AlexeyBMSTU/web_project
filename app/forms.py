@@ -23,6 +23,7 @@ class LoginForm(forms.Form):
         if str(*user_db) != "":
             user_get = User.objects.get( username = user_input)
             if user_get.check_password((password_input)) == False and user_input != user_get:
+                self.add_error('username', '')
                 raise forms.ValidationError( "Passwords or username must be the same")
             return password_input
         # else:
@@ -47,13 +48,13 @@ class RegisterForm(forms.ModelForm):
         if password != password_check or (email_input is None):
             #raise ValidationError('Password do not match')
             self.add_error('password_check', '')
-            self.add_error('__all__', 'Password do not match')
+            self.add_error('__all__', 'Passwords dont match')
         if str(user_input) == str(*user_db) or str(email_input) == email_db:
             self.add_error('username', '')
             self.add_error('password', '')
             self.add_error('password_check', '')
             self.add_error('email', '')
-            self.add_error('__all__', 'This username is already taken')
+            self.add_error('__all__', 'This user is already registered')
             # raise ValidationError('This account already used')
             
 
@@ -106,19 +107,19 @@ class CreateQuestion(forms.ModelForm):
         if  str(*title_db) != "" or str(*text_db) != "":
             self.add_error('title', '')
             self.add_error('text', '')
-            self.add_error('__all__', 'This question is already exists')
+            self.add_error('__all__', 'This question is already there')
             #raise ValidationError('This question is already uses')
         tag_input  = self.cleaned_data['tag']
         new_split = str(tag_input).split()      
         if len(new_split) > 3:
-            self.add_error('tag', 'This tag only 3')
+            self.add_error('tag', 'The number of tags has been exceeded. Maximum of 3')
     global new_split  
     def save(self, kwargs):
         tag_input  = self.cleaned_data['tag']
         new_split = str(tag_input).split()
         initial = []
         for i in range(len(new_split)):
-            new_tag  = TagModel.objects.create(id = 5*kwargs+i, title=new_split[i])
+            new_tag  = TagModel.objects.create(id = kwargs+i, title=new_split[i])
             initial.append(new_tag)
 
         #new_tag  = TagModel.objects.create(id = kwargs, title=self.cleaned_data['tag'] )
