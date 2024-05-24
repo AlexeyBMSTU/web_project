@@ -35,7 +35,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('logout', views.log_out, name='logout'),
     path('profile/edit', views.edit_profile, name='profile'),
-    path('profile', views.profile, name='my_profile'),
    # path('test', views.test, name='test'),
    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT})
 ] #+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

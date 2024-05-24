@@ -76,7 +76,7 @@ class Command(BaseCommand):
     def __create_tags(n_tags: int):
 
         new_tags = [
-            TagModel(id = i,title=f'Tag{i} ')
+            TagModel(id = i,title=f'Tag{i}')
             for i in range(n_tags)
         ]
         tages = TagModel.objects.bulk_create(new_tags)

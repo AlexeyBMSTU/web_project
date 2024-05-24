@@ -104,27 +104,7 @@
             
         </header>
 
-        <div class="col-15 d-flex justify-content-end align-items-center">
-    
-            <aside class="col-md-3   blog-sidebar">
-                <h2 class="font-italic figure"> Popular tags:</h2>  
-                <h2></h2>
-                {% for q in popular_tags %}
-                
-                {%  for t in q.tags.all %} 
-            
-                <a href="{% url 'tag' t.id %}"> <button type="button" class="btn btn-outline-info text-primary" >{{t.title}}</button></a> 
-            
-            {% endfor %}
-            {% endfor %}
-               <h2></h2>
-               <div class="text-center"><a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a> </div>
-    
-            </aside>
-                    
-            
-    
-        </div>
+
     </div>
 <main>
     
@@ -147,7 +127,19 @@
             <div class="col-15 d-flex justify-content-end align-items-center">
 
                 <aside class="col-md-3 blog-sidebar">
-                   
+                    <h2 class="font-italic figure"> Popular tags:</h2>  
+                    <h2></h2>
+                    {% for tag in popular_tags %}
+                    
+                    
+                
+                    <a href="{% url 'tag' tag.id %}"> <button type="button" class="btn btn-outline-info text-primary" >{{tag.title}}</button></a> 
+                
+                
+                {% endfor %}
+                   <h2></h2>
+                   <div class="text-center"><a href="{% url 'base' %}"><button type="button" class="p-3 btn btn-outline-info text-primary"><h4>View all</h4></button></a> </div>
+    
 
                     <div class="p-1">
                         <h2 class="font-italic">Best members</h2>

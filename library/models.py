@@ -5,10 +5,9 @@ from django.db.models import Count
 
 # Create models here.
 
-class AnswerManager( models.Model ):
+class AnswerManager( models.Manager ):
     def get_answer_with_id( self, answer_id ):
         return self.filter( question = answer_id ).order_by('-correct', '-published_at')
-        #return self.get(question=answer_id).answers.count()
 
 class QuestionManager( models.Manager ):
 
@@ -24,23 +23,21 @@ class QuestionManager( models.Manager ):
     def get_question_by_tag( self, tag_id ):
         return self.filter( tags = tag_id ).annotate(num_tags=Count('tags'))
     
-    def get_author_with_id( self, author_id ):
-        return self.filter( id = author_id )
-    
-    def get_all_users( self ):
-        return self.all()
-    
 
-class TagManager( models.Model ):
+class TagManager( models.Manager ):
     def get_popular_tag( self ):
-        return self.annotate(num_questions=Count('questions')).order_by('-num_questions')[:1]
-        #return self.annotate(num_tags=Count('tags')).order_by('-rating')[:4]   
-        #annotate(num_questions=Count('questions')).order_by('-num_questions')
-class TagModel(models.Model):
+        return self.annotate(num_questions=Count('questions')).order_by('-num_questions')[:10]
+    def get_current_tag( self, tag_id ):
+        return self.filter( id = tag_id )
+        
+         
+        
+
+class TagModel( models.Model ):
     title = models.CharField(max_length=100)
-    #n_questions = models.ManyToManyField('Questionss', related_name='tags')
     
     objects = TagManager()
+     
     def __str__(self):
         return self.title
     
@@ -56,13 +53,14 @@ class QuestionModel(models.Model):
     published_at = models.DateTimeField(db_default=Now())
 
     objects = QuestionManager()
+
     def __str__(self):
         return self.title
     
 class AnswerModel(models.Model):
     text = models.TextField()
 
-    question = models.ForeignKey(QuestionModel, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(QuestionModel, on_delete=models.CASCADE, related_name='question')
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="answers")
     rating = models.IntegerField(default=0)
     correct = models.CharField(max_length=100)
@@ -71,6 +69,8 @@ class AnswerModel(models.Model):
     objects = AnswerManager()
 
 class AnswerLikeModel(models.Model):
+    statusChoice = [{0, "None"}, {1, "Like"}]
+    status = models.IntegerField(choices=statusChoice, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='answer_likes')
     answer = models.ForeignKey(AnswerModel, on_delete=models.CASCADE, related_name="answer_likes")
 
@@ -83,7 +83,8 @@ class AnswerLikeModel(models.Model):
 
 
 class QuestionLikeModel(models.Model):
-#-1, +1 like
+    statusChoice = [{0, "None"}, {1, "Like"}]
+    status = models.IntegerField(choices=statusChoice, null=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='question_likes')
     question = models.ForeignKey(QuestionModel, on_delete=models.CASCADE, related_name='question_likes')
 

@@ -100,7 +100,7 @@ class CreateQuestion(forms.ModelForm):
 
         title_input = self.cleaned_data['title']
         text_input  = self.cleaned_data['text']
-
+        
         title_db = QuestionModel.objects.filter( title = title_input)
         text_db  = QuestionModel.objects.filter( text = text_input)
 
@@ -110,6 +110,11 @@ class CreateQuestion(forms.ModelForm):
             self.add_error('__all__', 'This question is already there')
             #raise ValidationError('This question is already uses')
         tag_input  = self.cleaned_data['tag']
+        # tag_db   = TagModel.objects.filter(title=tag_input)
+        # if tag_db:
+        #     print("SUCHESTVETE")
+
+        
         new_split = str(tag_input).split()      
         if len(new_split) > 3:
             self.add_error('tag', 'The number of tags has been exceeded. Maximum of 3')
@@ -117,17 +122,21 @@ class CreateQuestion(forms.ModelForm):
     def save(self, kwargs):
         tag_input  = self.cleaned_data['tag']
         new_split = str(tag_input).split()
+
         initial = []
         for i in range(len(new_split)):
-            new_tag  = TagModel.objects.create(id = kwargs+i, title=new_split[i])
-            initial.append(new_tag)
+            tag_db = TagModel.objects.filter(title = new_split[i])
+            if tag_db.exists():
+                initial.append(tag_db.first())
+            else:
+                new_tag  = TagModel.objects.create(id = kwargs+i, title=new_split[i])
+                initial.append(new_tag)
 
-        #new_tag  = TagModel.objects.create(id = kwargs, title=self.cleaned_data['tag'] )
         users    = User.objects.all()
-        # new_ask = QuestionModel.objects.create(user = users[randint(0,len(users))], title=self.cleaned_data['title'], text=self.cleaned_data['text'])
         new_ask   = QuestionModel.objects.create(id = kwargs, user = users[randint(0,len(users)-1)], title=self.cleaned_data['title'], text=self.cleaned_data['text'])
         new_ask.tags.set(*[initial])
         return new_ask
+
 
 
 class CreateAnswer(forms.ModelForm):
